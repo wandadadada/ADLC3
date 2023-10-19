@@ -58,7 +58,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: 'wandadadada/adlc3: ${{ github.sha }}'
+          tags: 'wandadadada/adlc3:${{ github.sha }}'
 
   # new_push_job:
   #   runs-on: ubuntu-latest
