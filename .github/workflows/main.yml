@@ -36,7 +36,7 @@ jobs:
     steps:
       -
         name: Print GITHUB_SHA
-        run: echo ${{ env.GITHUB_SHA }}    
+        run: echo ${{ GITHUB_SHA }}    
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
