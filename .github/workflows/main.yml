@@ -9,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check Commit Message
-        run: |
-          if [[ "${{ github.event.head_commit.message }}" == '#NORUN'* ]]; then
-            echo "Commit message starts with #NORUN. Skipping the pipeline."
-            exit 0
-          fi
+      # - name: Check Commit Message
+      #   run: |
+      #     if [[ "${{ github.event.head_commit.message }}" == '#NORUN'* ]]; then
+      #       echo "Commit message starts with #NORUN. Skipping the pipeline."
+      #       exit 0
+      #     fi
       - name: Checkout Code
         uses: actions/checkout@v3
 
