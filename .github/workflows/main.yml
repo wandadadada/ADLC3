@@ -55,7 +55,19 @@ jobs:
           push: true
           tags: wandadadada/adlc3:abcd1234
 
-
+  new_push_job:
+    runs-on: ubuntu-latest
+    name: New push to repo
+    steps:
+    - name: Publish to slack channel via bot token
+      id: slack
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        channel-id: 'test-submission' # ID of Slack Channel you want to post to
+        slack-message: 'posting from a github action!' # The message you want to post
+      env:
+        SLACK_BOT_TOKEN: "xoxb-5828957891927-5846920816146-MAMo5SZfdkgSEyjaONh4cVh9"
+        # ${{ secrets.SLACK_BOT_TOKEN }}
 
 
 
