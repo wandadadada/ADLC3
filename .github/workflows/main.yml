@@ -35,8 +35,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: Print GITHUB_SHA
+        run: echo ${{ env.GITHUB_SHA }}    
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+        
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -48,12 +52,13 @@ jobs:
           password: 'dckr_pat_u0N4fTz9nQI_aO9Bco5T15hlYpg'
           # username: ${{ secrets.DOCKERHUB_USERNAME }}
           # password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       -
         name: Build and push
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: "wandadadada/adlc3:${{ env.GITHUB_SHA }}"
+          tags: 'wandadadada/adlc3: '
 
   # new_push_job:
   #   runs-on: ubuntu-latest
