@@ -1,9 +1,21 @@
 name: ADLC3
-on: [push]
+on: 
+  push:
+    branches:
+      - 'v[0-9]{1,2}.[0-9]{1,2}'
 
 jobs:
-  startornot
-    if: "!startsWith(github.event.head_commit.message, '#NORUN')"
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 
+      - name: Check Commit Message
+        run: |
+          if [[ "${{ github.event.head_commit.message }}" == '#NORUN'* ]]; then
+            echo "Commit message starts with #NORUN. Skipping the pipeline."
+            exit 0
+          fi
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+        
