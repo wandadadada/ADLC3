@@ -1,4 +1,4 @@
-name: 
+name: GGGGGG
 on: 
   push:
     branches:
@@ -93,7 +93,7 @@ jobs:
           SLACK_TITLE: Post Title
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_MESSAGE: 'Post Content :rocket:'
+          # SLACK_MESSAGE: 'Post Content :rocket:'
           SLACK_EMAIL: "123@abc.com"
           SLACK_Git: "hhhxxxx"
           SLACK_Image: "xxx@xxx-tag"
