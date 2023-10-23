@@ -61,9 +61,9 @@ jobs:
           title: 'title of file'
           initial_comment: 'post by slack-upload-file'
 
-  dockerBuildPush:
-    runs-on: ubuntu-latest
-    steps:
+  # dockerBuildPush:
+  #   runs-on: ubuntu-latest
+  #   steps:
       -
         name: Print GITHUB_SHA
         run: echo ${{ github.sha }}
@@ -95,23 +95,28 @@ jobs:
       - name: Check the installation
         run: cosign version
 
-      - name: Sign the images with GitHub OIDC Token
+      - name: Sign image with a key
+        run: |
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
         env:
+          TAGS: ${{ steps.docker_meta.outputs.tags }}
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
-          TAGS: 'wandadadada/adlc3:${{ github.sha }}'
-        run: cosign sign --yes "${TAGS}@${DIGEST}"
 
   # new_push_job:
   #   runs-on: ubuntu-latest
     # name: New push to repo
     # steps:
 
-      - uses: MeilCli/slack-upload-file@v3
-        with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: "test"
-          file_path: 'docs/*.json'
-          initial_comment: 'post by slack-upload-file'
+      # - uses: MeilCli/slack-upload-file@v3
+      #   with:
+      #     slack_token: ${{ secrets.SLACK_TOKEN }}
+      #     channel_id: "test"
+      #     file_path: 'docs/*.json'
+      #     initial_comment: 'post by slack-upload-file'
+
+      
           # thread_ts: 'option'
       # - name: Send GitHub trigger payload to Slack Workflow Builder
       #   id: slack
