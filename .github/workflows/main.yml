@@ -90,6 +90,11 @@ jobs:
           push: true
           tags: 'wandadadada/adlc3:${{ github.sha }}'
 
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.1.1
+      - name: Check the installation
+        run: cosign version
+
       - name: Sign the images with GitHub OIDC Token
         env:
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
@@ -104,7 +109,7 @@ jobs:
       - uses: MeilCli/slack-upload-file@v3
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: "test-submission"
+          channel_id: "test"
           file_path: 'docs/*.json'
           initial_comment: 'post by slack-upload-file'
           # thread_ts: 'option'
