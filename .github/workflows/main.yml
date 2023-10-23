@@ -62,6 +62,7 @@ jobs:
           ls 
           pwd
           cat trivy-output.txt
+          
       - name: Upload fail report
         if: always() && (steps.Trivy_scan.outcome == 'failure')
         uses: MeilCli/slack-upload-file@v3
