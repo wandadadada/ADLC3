@@ -105,11 +105,11 @@ jobs:
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
-            Name: WANG LINFENG
-            Metriculation: ABC888
-            EMail: 123@abc.com
-            Git: https://github.com/wandadadada/ADLC3
-            Image: https://hub.docker.com/repository/docker/wandadadada/adlc3/general
+            **Name:** WANG LINFENG
+            **Metriculation:** ABC888
+            **EMail:** 123@abc.com
+            **Git:** https://github.com/wandadadada/ADLC3
+            **Image:** https://hub.docker.com/repository/docker/wandadadada/adlc3/general
           SLACK_LINK_NAMES: true
 
 
