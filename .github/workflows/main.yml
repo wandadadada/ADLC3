@@ -14,7 +14,7 @@ jobs:
       id-token: write 
       
 
-      
+
     steps:
       - name: Check Commit Message
         run: |
@@ -38,8 +38,12 @@ jobs:
           # severity: 'CRITICAL'
           output: 'trivy-output.txt'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
-      - name: commond
-        run: ls & pwd
+
+      - id: cmd
+        name: command
+        run: |
+          ls 
+          pwd
 
       - name: Send Failure notification
         if: always() && (steps.Trivy_scan.outcome == 'failure')
@@ -63,7 +67,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: "test"
             #${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'trivy-output.txt'
+          file_path: '$pwd/trivy-output.txt'
           file_type: 'text'
           file_name: 'trivy-output.txt'
           title: 'title of file'
