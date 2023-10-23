@@ -87,8 +87,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-
-      - id: slack
+      - id: slack_2
         uses: slackapi/slack-github-action@v1.24.0
         with:
           # The following message update step does not accept a channel name.
@@ -113,7 +112,7 @@ jobs:
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN}}
-          
+
       - uses: slackapi/slack-github-action@v1.24.0
         with:
           # Unlike the step posting a new message, this step does not accept a channel name.
