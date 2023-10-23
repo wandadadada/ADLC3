@@ -119,10 +119,6 @@ jobs:
           push: true
           tags: 'wandadadada/adlc3:${{ github.sha }}'
 
-      - id: cmd
-        name: command
-        run: "echo ${{ steps.docker_build.outputs.metadata }}"
-
       - name: Send Success Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
