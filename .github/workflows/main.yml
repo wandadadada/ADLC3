@@ -23,7 +23,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Run Trivy vulnerability scanner in repo mode
+      - id: Trivy_scan
+        name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
@@ -37,7 +38,7 @@ jobs:
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Send Failure notification
-        # if: always() && (steps.scan.outcome == 'failure')
+        if: always() && (steps.Trivy_scan.outcome == 'failure')
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -50,7 +51,7 @@ jobs:
       #     github-pat: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload fail report
-        if: always() && (steps.scan.outcome == 'failure')
+        if: always() && (steps.Trivy_scan.outcome == 'failure')
         uses: MeilCli/slack-upload-file@v3
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
@@ -105,9 +106,9 @@ jobs:
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
-            _Name:_ WANG LINFENG
-            *Metriculation:* ABC888
-            *Email:* 123@abc.com
+            *Name:* Wang Linfeng
+            *Metriculation:* Abc888
+            *Email:* e1221853@u.nus.edu
             *Git:* https://github.com/wandadadada/ADLC3
             *Image:* https://hub.docker.com/repository/docker/wandadadada/adlc3/general
           SLACK_LINK_NAMES: true
