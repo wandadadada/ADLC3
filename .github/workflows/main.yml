@@ -84,6 +84,16 @@ jobs:
           # username: ${{ secrets.DOCKERHUB_USERNAME }}
           # password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+
+
+
+      - id: docker_build
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: 'wandadadada/adlc3:${{ github.sha }}'
+
       - name: Send Success Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
@@ -98,19 +108,10 @@ jobs:
             Name: WANG LINFENG
             Metriculation: ABC888
             EMail: 123@abc.com
-            Git: hhhxxxx
-            Image: xxx@xxx-tag
-
-          
+            Git: https://github.com/wandadadada/ADLC3
+            Image: https://hub.docker.com/repository/docker/wandadadada/adlc3/general
           SLACK_LINK_NAMES: true
 
-
-      - id: docker_build
-        name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: 'wandadadada/adlc3:${{ github.sha }}'
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1
