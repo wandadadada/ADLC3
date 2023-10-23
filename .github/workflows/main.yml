@@ -142,14 +142,20 @@ jobs:
       - name: Check the installation
         run: cosign version
 
-      - name: Sign image with a key
-        run: |
-          cosign sign --yes --key env:${COSIGN_PRIVATE_KEY} "${TAGS}@${DIGEST}"
+      - name: Sign the images with GitHub OIDC Token
         env:
-          TAGS: ${{ steps.docker_build.outputs.tags }}
-          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          DIGEST: ${{ steps.docker_build.outputs.digest }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
+          TAGS: ${{ steps.docker_meta.outputs.tags }}
+        run: cosign sign --yes "${TAGS}@${DIGEST}"
+
+      # - name: Sign image with a key
+      #   run: |
+      #     cosign sign --yes --key env:${COSIGN_PRIVATE_KEY} "${TAGS}@${DIGEST}"
+      #   env:
+      #     TAGS: ${{ steps.docker_build.outputs.tags }}
+      #     COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+      #     COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      #     DIGEST: ${{ steps.docker_build.outputs.digest }}
 
   # new_push_job:
   #   runs-on: ubuntu-latest
