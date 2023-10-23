@@ -100,21 +100,21 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "EMAIL: ${{ SLACK_EMAIL }} "
+                    "text": "EMAIL: ${SLACK_EMAIL} "
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Git: ${{ SLACK_Git }} "
+                    "text": "Git: ${SLACK_Git} "
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Image: ${{ SLACK_Image }} "
+                    "text": "Image: ${SLACK_Image} "
                   }
                 }
               ]
