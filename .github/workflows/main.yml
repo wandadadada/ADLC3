@@ -84,7 +84,22 @@ jobs:
           # username: ${{ secrets.DOCKERHUB_USERNAME }}
           # password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      -
+      - name: Send Success Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: general
+          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: 'Post Content :rocket:'
+          SLACK_TITLE: Post Title
+          SLACK_USERNAME: rtCamp
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_EMAIL: 123@abc.com
+          SLACK_Git: hhhxxxx
+          SLACK_Image: xxx@xxx-tag
+
+
+      - id: docker_build
         name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -100,10 +115,10 @@ jobs:
         run: |
           cosign sign --yes --key env:${COSIGN_PRIVATE_KEY} "${TAGS}@${DIGEST}"
         env:
-          TAGS: ${{ steps.docker_meta.outputs.tags }}
+          TAGS: ${{ steps.docker_build.outputs.tags }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
+          DIGEST: ${{ steps.docker_build.outputs.digest }}
 
   # new_push_job:
   #   runs-on: ubuntu-latest
@@ -197,19 +212,6 @@ jobs:
 
 
 
-      - name: Send Success Slack Notification
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: general
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Post Content :rocket:'
-          SLACK_TITLE: Post Title
-          SLACK_USERNAME: rtCamp
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_EMAIL: 123@abc.com
-          SLACK_Git: hhhxxxx
-          SLACK_Image: xxx@xxx-tag
 
 
 
