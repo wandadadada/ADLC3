@@ -27,6 +27,8 @@ jobs:
           image-ref: '.'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
           create_slack_notification: true
+
+          
           # scan-type: 'fs'
           # ignore-unfixed: true
           # format: 'sarif'
@@ -77,8 +79,8 @@ jobs:
       - uses: MeilCli/slack-upload-file@v3
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: "test"
-          file_path: 'sarif/*.sarif'
+          channel_id: "test-submission"
+          file_path: 'docs/*.json'
           initial_comment: 'post by slack-upload-file'
           # thread_ts: 'option'
       # - name: Send GitHub trigger payload to Slack Workflow Builder
