@@ -36,6 +36,8 @@ jobs:
           # severity: 'CRITICAL'
           output: 'trivy-output.txt'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
+      - name: commond
+        run: ls & pwd
 
       - name: Send Failure notification
         if: always() && (steps.Trivy_scan.outcome == 'failure')
@@ -49,9 +51,7 @@ jobs:
       #   with:
       #     sarif_file: 'trivy-results.sarif'
       #     github-pat: ${{ secrets.GITHUB_TOKEN }}
-      - name: commond
-        run: ls
-         pwd
+
         
 
       - name: Upload fail report
