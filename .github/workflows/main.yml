@@ -70,16 +70,14 @@ jobs:
         with:
           token: ${{ secrets.SLACK_TOKEN }}
           path: trivy-output.txt
-          channel: "test"
-            #${{ secrets.SLACK_CHANNEL_ID }}
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
 
       - name: Upload fail report
         if: always() && (steps.Trivy_scan.outcome == 'failure')
         uses: MeilCli/slack-upload-file@v3
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: "test"
-            #${{ secrets.SLACK_CHANNEL_ID }}
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: './trivy-output.txt'
           file_type: 'text'
           file_name: 'trivy-output.txt'
