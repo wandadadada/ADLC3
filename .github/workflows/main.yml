@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Scan_Build_Sign_Slack
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -33,7 +33,7 @@ jobs:
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL'
+          # severity: 'CRITICAL'
           output: 'trivy-output.txt'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
