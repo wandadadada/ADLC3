@@ -62,7 +62,7 @@ jobs:
           ls 
           pwd
           cat trivy-output.txt
-          
+
       - name: Upload fail report
         if: always() && (steps.Trivy_scan.outcome == 'failure')
         uses: MeilCli/slack-upload-file@v3
@@ -71,7 +71,7 @@ jobs:
           channel_id: "test"
             #${{ secrets.SLACK_CHANNEL_ID }}
           file_path: './trivy-output.txt'
-          file_type: 'text'
+          file_type: 'test'
           file_name: 'trivy-output.txt'
           title: 'title of file'
           initial_comment: 'post by slack-upload-file' 
