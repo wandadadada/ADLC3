@@ -72,10 +72,7 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: "test"
-          content: 'file content'
-          file_type: 'text'
-          file_name: 'text.txt'
-          title: 'title of file'
+          file_path: 'sarif/*.sarif'
           initial_comment: 'post by slack-upload-file'
           # thread_ts: 'option'
       # - name: Send GitHub trigger payload to Slack Workflow Builder
