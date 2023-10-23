@@ -32,7 +32,7 @@ jobs:
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL'
+          # severity: 'CRITICAL'
           output: 'trivy-output.txt'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
@@ -98,10 +98,10 @@ jobs:
 
       - name: Sign image with a key
         run: |
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
+          cosign sign --yes --key env:${{ secrets.COSIGN_PRIVATE_KEY }} "${{TAGS}}@${{DIGEST}}"
         env:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
-          COSIGN_PRIVATE_KEY: "ABC"
+          COSIGN_PUBLIC_KEY: "ABC"
             #${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: "ABC"
             #${{ secrets.COSIGN_PASSWORD }}
