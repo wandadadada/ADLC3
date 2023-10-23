@@ -55,13 +55,13 @@ jobs:
       #     github-pat: ${{ secrets.GITHUB_TOKEN }}
 
         
-      - id: cmd
-        if: always() && (steps.Trivy_scan.outcome == 'failure')
-        name: command
-        run: |
-          ls 
-          pwd
-          cat trivy-output.txt
+      # - id: cmd
+      #   if: always() && (steps.Trivy_scan.outcome == 'failure')
+      #   name: command
+      #   run: |
+      #     ls 
+      #     pwd
+      #     cat trivy-output.txt
 
 
 
@@ -111,12 +111,17 @@ jobs:
 
 
 
+
       - id: docker_build
         name: Build and push
         uses: docker/build-push-action@v5
         with:
           push: true
           tags: 'wandadadada/adlc3:${{ github.sha }}'
+
+      - id: cmd
+        name: command
+        run: "echo ${{ steps.docker_build.outputs.metadata }}"
 
       - name: Send Success Slack Notification
         uses: rtCamp/action-slack-notify@v2
@@ -144,8 +149,8 @@ jobs:
 
       - name: Sign the images with GitHub OIDC Token
         env:
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-          TAGS: ${{ steps.docker_meta.outputs.tags }}
+          DIGEST: ${{ steps.docker_build.outputs.digest }}
+          TAGS: 'wandadadada/adlc3:${{ github.sha }}'
         run: cosign sign --yes "${TAGS}@${DIGEST}"
 
       # - name: Sign image with a key
