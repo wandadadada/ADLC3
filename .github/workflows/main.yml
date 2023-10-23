@@ -31,13 +31,13 @@ jobs:
           image-ref: '.'
           exit-code: '1'
           ignore-unfixed: true
-          vuln-type: 'os,library'
-          # severity: 'CRITICAL'
+          # vuln-type: 'os,library'
+          severity: 'CRITICAL'
           output: 'trivy-output.txt'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Send Failure notification
-        if: always() && (steps.scan.outcome == 'failure')
+        if: always() && (steps.scan.outcome != 'success')
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
