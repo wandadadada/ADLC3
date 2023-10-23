@@ -93,7 +93,32 @@ jobs:
           SLACK_TITLE: Post Title
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          # SLACK_MESSAGE: 'Post Content :rocket:'
+          SLACK_MESSAGE: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "EMAIL: ${{ SLACK_EMAIL }} "
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Git: ${{ SLACK_Git }} "
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Image: ${{ SLACK_Image }} "
+                  }
+                }
+              ]
+            }
           SLACK_EMAIL: "123@abc.com"
           SLACK_Git: "hhhxxxx"
           SLACK_Image: "xxx@xxx-tag"
