@@ -73,14 +73,6 @@ jobs:
           path: trivy-output.txt
           channel: ${{ secrets.SLACK_CHANNEL_ID }}
 
-      - name: Send custom JSON data to Slack workflow
-        id: slack
-        if: always() && (steps.Trivy_scan.outcome == 'failure')
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          payload-file-path: "./trivy-output.txt"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           
       # - name: Upload fail report
       #   if: always() && (steps.Trivy_scan.outcome == 'failure')
