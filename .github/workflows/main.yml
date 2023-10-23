@@ -1,4 +1,4 @@
-name: 
+name: Build and Push
 on: 
   push:
     branches:
@@ -6,7 +6,14 @@ on:
 
 jobs:
   build:
+    name: Scan_Build_Sign_Slack
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write 
+      
+
 
     steps:
       - name: Check Commit Message
@@ -18,156 +25,96 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Run Trivy vulnerability scanner in repo mode
+      - id: Trivy_scan
+        name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
-          format: 'github'
-          output: 'dependency-results.sbom.json'
+          format: 'table'
           image-ref: '.'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL'
+          output: 'trivy-output.txt'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
 
-          # scan-type: 'fs'
-          # ignore-unfixed: true
-          # format: 'sarif'
-          # output: 'trivy-results.sarif'
-          # severity: 'CRITICAL'
-      # - name: Upload Trivy scan results to GitHub Security tab
-      #   uses: github/codeql-action/upload-sarif@v2
-      #   with:
-      #     sarif_file: 'trivy-results.sarif'
-      #     github-pat: ${{ secrets.GITHUB_TOKEN }}
 
-      
-  # dockerBuildPush:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     -
-  #       name: Print GITHUB_SHA
-  #       run: echo ${{ github.sha }}
-  #     -
-  #       name: Set up QEMU
-  #       uses: docker/setup-qemu-action@v3
-        
-  #     -
-  #       name: Set up Docker Buildx
-  #       uses: docker/setup-buildx-action@v3
-  #     -
-  #       name: Login to Docker Hub
-  #       uses: docker/login-action@v3
-  #       with:
-  #         username: 'wandadadada'
-  #         password: 'dckr_pat_u0N4fTz9nQI_aO9Bco5T15hlYpg'
-  #         # username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #         # password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Send Failure notification
+        if: always() && (steps.Trivy_scan.outcome == 'failure')
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: 'Failed trivy scan'
 
-  #     -
-  #       name: Build and push
-  #       uses: docker/build-push-action@v5
-  #       with:
-  #         push: true
-  #         tags: 'wandadadada/adlc3:${{ github.sha }}'
 
-  # new_push_job:
-  #   runs-on: ubuntu-latest
-    # name: New push to repo
-    # steps:
 
-      - uses: MeilCli/slack-upload-file@v3
+      - name: Upload to slack step
+        if: always() && (steps.Trivy_scan.outcome == 'failure')
+        uses: adrey/slack-file-upload-action@master
         with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: "test-submission"
-          file_path: 'docs/*.json'
-          initial_comment: 'post by slack-upload-file'
-          # thread_ts: 'option'
-      # - name: Send GitHub trigger payload to Slack Workflow Builder
-      #   id: slack
-      #   uses: slackapi/slack-github-action@v1.24.0
-      #   with:
-      #     payload: |
-      #       {
-      #         "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-      #         "blocks": [
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-      #             }
-      #           }
-      #         ]
-      #       }
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-      # - id: slack_2
-      #   uses: slackapi/slack-github-action@v1.24.0
-      #   with:
-      #     # The following message update step does not accept a channel name.
-      #     # Setting a channel ID here for consistency is highly recommended.
-      #     channel-id: "CHANNEL_ID"
-      #     payload: |
-      #       {
-      #         "text": "Deployment started (In Progress)",
-      #         "attachments": [
-      #           {
-      #             "pretext": "Deployment started",
-      #             "color": "dbab09",
-      #             "fields": [
-      #               {
-      #                 "title": "Status",
-      #                 "short": true,
-      #                 "value": "In Progress"
-      #               }
-      #             ]
-      #           }
-      #         ]
-      #       }
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL}}
-      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-      # - uses: slackapi/slack-github-action@v1.24.0
-      #   with:
-      #     # Unlike the step posting a new message, this step does not accept a channel name.
-      #     # Please use a channel ID, not a name here.
-      #     channel-id: "CHANNEL_ID"
-      #     update-ts: ${{ steps.slack.outputs.ts }}
-      #     payload: |
-      #       {
-      #         "text": "Deployment finished (Completed)",
-      #         "attachments": [
-      #           {
-      #             "pretext": "Deployment finished",
-      #             "color": "28a745",
-      #             "fields": [
-      #               {
-      #                 "title": "Status",
-      #                 "short": true,
-      #                 "value": "Completed"
-      #               }
-      #             ]
-      #           }
-      #         ]
-      #       }
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL}}       
-      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK   
+          token: ${{ secrets.SLACK_TOKEN }}
+          path: trivy-output.txt
+          channel: ${{ secrets.SLACK_CHANNEL_ID }}
 
 
+      - name: Print GITHUB_SHA
+        run: echo ${{ github.sha }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
 
-      - name: Slack Notification
+      - id: docker_build
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: 'wandadadada/adlc3:${{ github.sha }}'
+
+      - name: Send Success Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: general
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_COLOR: ${{ job.status }}
           SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Post Content :rocket:'
-          SLACK_TITLE: Post Title
+          SLACK_TITLE: Image Build and Signed
+          
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: |
+            *Name:* Wang Linfeng
+            *Metriculation:* Abc888
+            *Email:* e1221853@u.nus.edu
+            *Git:* https://github.com/wandadadada/ADLC3
+            *Image:* https://hub.docker.com/repository/docker/wandadadada/adlc3/general
+          SLACK_LINK_NAMES: true
+
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.1.1
+      - name: Check the installation
+        run: cosign version
+
+      - name: Sign the images with GitHub OIDC Token
+        env:
+          DIGEST: ${{ steps.docker_build.outputs.digest }}
+          TAGS: 'wandadadada/adlc3:${{ github.sha }}'
+        run: cosign sign --yes "${TAGS}@${DIGEST}"
+
+
+
+
+
 
 
