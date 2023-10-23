@@ -39,11 +39,7 @@ jobs:
           output: 'trivy-output.txt'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
-      - id: cmd
-        name: command
-        run: |
-          ls 
-          pwd
+
 
       - name: Send Failure notification
         if: always() && (steps.Trivy_scan.outcome == 'failure')
@@ -59,19 +55,23 @@ jobs:
       #     github-pat: ${{ secrets.GITHUB_TOKEN }}
 
         
-
-      - name: Upload fail report
-        if: always() && (steps.Trivy_scan.outcome == 'failure')
-        uses: MeilCli/slack-upload-file@v3
-        with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: "test"
-            #${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'docs/*.txt'
-          file_type: 'text'
-          file_name: 'trivy-output.txt'
-          title: 'title of file'
-          initial_comment: 'post by slack-upload-file' 
+      - id: cmd
+        name: command
+        run: |
+          ls 
+          pwd
+      # - name: Upload fail report
+      #   if: always() && (steps.Trivy_scan.outcome == 'failure')
+      #   uses: MeilCli/slack-upload-file@v3
+      #   with:
+      #     slack_token: ${{ secrets.SLACK_TOKEN }}
+      #     channel_id: "test"
+      #       #${{ secrets.SLACK_CHANNEL_ID }}
+      #     file_path: 'docs/*.txt'
+      #     file_type: 'text'
+      #     file_name: 'trivy-output.txt'
+      #     title: 'title of file'
+      #     initial_comment: 'post by slack-upload-file' 
 
   # dockerBuildPush:
   #   runs-on: ubuntu-latest
