@@ -98,13 +98,11 @@ jobs:
 
       - name: Sign image with a key
         run: |
-          cosign sign --yes --key env:${{ secrets.COSIGN_PRIVATE_KEY }} "${{TAGS}}@${{DIGEST}}"
+          cosign sign --yes --key env:${{ secrets.COSIGN_PRIVATE_KEY }} "${TAGS}@${DIGEST}"
         env:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
-          COSIGN_PUBLIC_KEY: "ABC"
-            #${{ secrets.COSIGN_PRIVATE_KEY }}
-          COSIGN_PASSWORD: "ABC"
-            #${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
 
   # new_push_job:
