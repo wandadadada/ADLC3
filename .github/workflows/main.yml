@@ -49,6 +49,10 @@ jobs:
       #   with:
       #     sarif_file: 'trivy-results.sarif'
       #     github-pat: ${{ secrets.GITHUB_TOKEN }}
+      - name: commond
+        run: ls
+         pwd
+        
 
       - name: Upload fail report
         if: always() && (steps.Trivy_scan.outcome == 'failure')
@@ -57,7 +61,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: "test"
             #${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: '$PWD/trivy-output.txt'
+          file_path: 'trivy-output.txt'
           file_type: 'text'
           file_name: 'trivy-output.txt'
           title: 'title of file'
