@@ -56,6 +56,7 @@ jobs:
 
         
       - id: cmd
+        if: always() && (steps.Trivy_scan.outcome == 'failure')
         name: command
         run: |
           ls 
