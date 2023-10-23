@@ -54,7 +54,8 @@ jobs:
         uses: MeilCli/slack-upload-file@v3
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+          channel_id: "test"
+            #${{ secrets.SLACK_CHANNEL_ID }}
           file_path: '$PWD/trivy-output.txt'
           file_type: 'text'
           file_name: 'trivy-output.txt'
@@ -100,8 +101,10 @@ jobs:
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
         env:
           TAGS: ${{ steps.docker_meta.outputs.tags }}
-          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_PRIVATE_KEY: "ABC"
+            #${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: "ABC"
+            #${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
 
   # new_push_job:
@@ -116,7 +119,7 @@ jobs:
       #     file_path: 'docs/*.json'
       #     initial_comment: 'post by slack-upload-file'
 
-      
+
           # thread_ts: 'option'
       # - name: Send GitHub trigger payload to Slack Workflow Builder
       #   id: slack
