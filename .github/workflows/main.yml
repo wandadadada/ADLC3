@@ -91,14 +91,18 @@ jobs:
           SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
           SLACK_ICON: https://github.com/rtCamp.png?size=48
           SLACK_TITLE: Post Title
-          SLACK_MESSAGE: Message aaaaaa
+          
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: |
+            Name: WANG LINFENG
+            Metriculation: ABC888
+            EMail: 123@abc.com
+            Git: hhhxxxx
+            Image: xxx@xxx-tag
 
+          
           SLACK_LINK_NAMES: true
-          SLACK_EMAIL: "123@abc.com"
-          SLACK_Git: "hhhxxxx"
-          SLACK_Image: "xxx@xxx-tag"
 
 
       - id: docker_build
