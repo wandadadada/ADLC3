@@ -26,6 +26,7 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL'
+          create_slack_notification: true
 
       # - name: Upload Trivy scan results to GitHub Security tab
       #   uses: github/codeql-action/upload-sarif@v2
@@ -87,32 +88,32 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-      - id: slack_2
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          # The following message update step does not accept a channel name.
-          # Setting a channel ID here for consistency is highly recommended.
-          channel-id: "CHANNEL_ID"
-          payload: |
-            {
-              "text": "Deployment started (In Progress)",
-              "attachments": [
-                {
-                  "pretext": "Deployment started",
-                  "color": "dbab09",
-                  "fields": [
-                    {
-                      "title": "Status",
-                      "short": true,
-                      "value": "In Progress"
-                    }
-                  ]
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL}}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      # - id: slack_2
+      #   uses: slackapi/slack-github-action@v1.24.0
+      #   with:
+      #     # The following message update step does not accept a channel name.
+      #     # Setting a channel ID here for consistency is highly recommended.
+      #     channel-id: "CHANNEL_ID"
+      #     payload: |
+      #       {
+      #         "text": "Deployment started (In Progress)",
+      #         "attachments": [
+      #           {
+      #             "pretext": "Deployment started",
+      #             "color": "dbab09",
+      #             "fields": [
+      #               {
+      #                 "title": "Status",
+      #                 "short": true,
+      #                 "value": "In Progress"
+      #               }
+      #             ]
+      #           }
+      #         ]
+      #       }
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL}}
+      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
       - uses: slackapi/slack-github-action@v1.24.0
         with:
