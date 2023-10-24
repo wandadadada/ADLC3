@@ -38,7 +38,7 @@ jobs:
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL'
+          severity: 'HIGH'
           output: 'trivy_scan_output.txt'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
