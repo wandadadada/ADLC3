@@ -17,9 +17,7 @@ jobs:
       packages: write
       id-token: write 
       
-      
     steps:
-      
       - name: Check Commit Message
         run: |
           if [[ "${{ github.event.head_commit.message }}" == '#NORUN'* ]]; then
@@ -41,12 +39,12 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL'
-          output: 'trivy-output.txt'
+          output: 'trivy_scan_output.txt'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
 
 
-      - name: Send Failure notification
+      - name: Send Scan Failure Notification
         if: always() && (steps.Trivy_scan.outcome == 'failure')
         uses: rtCamp/action-slack-notify@v2
         env:
@@ -54,13 +52,12 @@ jobs:
           SLACK_MESSAGE: 'Failed trivy scan'
 
 
-
       - name: Upload to slack step
         if: always() && (steps.Trivy_scan.outcome == 'failure')
         uses: adrey/slack-file-upload-action@master
         with:
           token: ${{ secrets.SLACK_TOKEN }}
-          path: trivy-output.txt
+          path: trivy_scan_output.txt
           channel: ${{ secrets.SLACK_CHANNEL_ID }}
 
 
@@ -99,7 +96,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
             *Name:* Wang Linfeng
-            *Metriculation:* Abc888
+            *Metriculation:* A0286041J
             *Email:* e1221853@u.nus.edu
             *Git:* https://github.com/wandadadada/ADLC3
             *Image:* https://hub.docker.com/repository/docker/wandadadada/adlc3/general
@@ -117,23 +114,6 @@ jobs:
           TAGS: 'wandadadada/adlc3:${{ github.sha }}'
         run: cosign sign --yes "${TAGS}@${DIGEST}"
 
-  build-2:
-    name: Scan_Build_Sign_Slack
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      id-token: write 
-      
-      
-    steps:
-      
-      - name: Check Commit Message
-        run: |
-          if [[ "${{ github.event.head_commit.message }}" == '#NORUN'* ]]; then
-            echo "Commit message starts with #NORUN. Skipping the pipeline."
-            exit 1
-          fi
         
 
 
