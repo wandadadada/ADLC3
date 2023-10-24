@@ -3,9 +3,9 @@ on:
   push:
     branches:
       - 'v[0-9]+\.[0-9]+'
-  pull_request:
-    branches:
-      - 'v[0-9]+\.[0-9]+'
+  # pull_request:
+  #   branches:
+  #     - 'v[0-9]+\.[0-9]+'
       
 
 jobs:
@@ -117,7 +117,24 @@ jobs:
           TAGS: 'wandadadada/adlc3:${{ github.sha }}'
         run: cosign sign --yes "${TAGS}@${DIGEST}"
 
-
+  build-2:
+    name: Scan_Build_Sign_Slack
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write 
+      
+      
+    steps:
+      
+      - name: Check Commit Message
+        run: |
+          if [[ "${{ github.event.head_commit.message }}" == '#NORUN'* ]]; then
+            echo "Commit message starts with #NORUN. Skipping the pipeline."
+            exit 1
+          fi
+        
 
 
 
