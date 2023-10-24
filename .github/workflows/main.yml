@@ -106,6 +106,10 @@ jobs:
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1
+        with:
+          unused pub_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDbqqK1A2VIZgEZ4ILivgKNUddyYnCnfbEQTFZb9HqffUtSCYnJ3Gzh5zLWohXN/pwBPRqPmemQp0GveHaRqYbbKn6fMlbF8Bxmufi/OIPr/DdLX2rYNvomcArx5g38ZNsqI6eogelixGviqdCBxm+5YzEE2vD/lastfyLGXgOQ1oL9VbMKVmwtiz7ni0PhBhwaAvVAgR0jBmhA6LMEII8N6bvflbYk1YevVo8v2a6/lPS1UskBYhJ1Fes8TSrRXKEL77ezv5AackvzPHa1HBgr4dfaPjSe+L3qXKmmT6cWC1bkYpwZtSirQ0XACPsNQJ95NX1bn1oJUWQfPj1EiiZjrV5GYioQnMtIphtYv5ci2XhDDEbwrbjr6ZnuzP+lNsClXaM2tcnUaaEo1CRL+Fb+rHAnPqk11uGxqC5mE7OGFuXy2FPvNxr1ELCQdnFZ8CAfG3NtabVQ1+XAyHxGHmDfXxNKfKdHPtJlBz1ni1O7MUsj7NmLnEhoModtXPnpUvs= fengf@Fenger
+
+          
       - name: Check the installation
         run: cosign version
 
@@ -114,6 +118,8 @@ jobs:
           DIGEST: ${{ steps.docker_build.outputs.digest }}
           TAGS: 'wandadadada/adlc3:${{ github.sha }}'
         run: cosign sign --yes "${TAGS}@${DIGEST}"
+
+
 
         
 
