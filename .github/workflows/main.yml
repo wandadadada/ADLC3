@@ -1,9 +1,13 @@
-name: Build and Push
+name: Scan Build Push Slack
 on: 
   push:
     branches:
       - 'v[0-9]+\.[0-9]+'
-
+  # Hi , if need can enable the code below    
+  # pull_request:
+  #   branches:
+  #     - 'v[0-9]+\.[0-9]+'
+      
 jobs:
   build:
     name: Scan_Build_Sign_Slack
@@ -13,15 +17,14 @@ jobs:
       packages: write
       id-token: write 
       
-
-
     steps:
       - name: Check Commit Message
         run: |
           if [[ "${{ github.event.head_commit.message }}" == '#NORUN'* ]]; then
             echo "Commit message starts with #NORUN. Skipping the pipeline."
-            exit 0
+            exit 1
           fi
+        
       - name: Checkout Code
         uses: actions/checkout@v3
 
@@ -36,18 +39,18 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL'
-          output: 'trivy-output.txt'
+          output: 'trivy_scan_output.txt'
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
 
 
-      - name: Send Failure notification
+      - name: Send Scan Failure Notification
         if: always() && (steps.Trivy_scan.outcome == 'failure')
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_MESSAGE: 'Failed trivy scan'
-
+          SLACK_TITLE: Scan Failure by WLF
+          SLACK_MESSAGE: 'Failed trivy scan,see uploaded report.'
 
 
       - name: Upload to slack step
@@ -55,7 +58,7 @@ jobs:
         uses: adrey/slack-file-upload-action@master
         with:
           token: ${{ secrets.SLACK_TOKEN }}
-          path: trivy-output.txt
+          path: trivy_scan_output.txt
           channel: ${{ secrets.SLACK_CHANNEL_ID }}
 
 
@@ -73,6 +76,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
 
 
       - id: docker_build
@@ -94,7 +98,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
             *Name:* Wang Linfeng
-            *Metriculation:* Abc888
+            *Metriculation:* A0286041J
             *Email:* e1221853@u.nus.edu
             *Git:* https://github.com/wandadadada/ADLC3
             *Image:* https://hub.docker.com/repository/docker/wandadadada/adlc3/general
@@ -103,6 +107,10 @@ jobs:
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.1.1
+        # The following is my public key
+        # unused pub_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDbqqK1A2VIZgEZ4ILivgKNUddyYnCnfbEQTFZb9HqffUtSCYnJ3Gzh5zLWohXN/pwBPRqPmemQp0GveHaRqYbbKn6fMlbF8Bxmufi/OIPr/DdLX2rYNvomcArx5g38ZNsqI6eogelixGviqdCBxm+5YzEE2vD/lastfyLGXgOQ1oL9VbMKVmwtiz7ni0PhBhwaAvVAgR0jBmhA6LMEII8N6bvflbYk1YevVo8v2a6/lPS1UskBYhJ1Fes8TSrRXKEL77ezv5AackvzPHa1HBgr4dfaPjSe+L3qXKmmT6cWC1bkYpwZtSirQ0XACPsNQJ95NX1bn1oJUWQfPj1EiiZjrV5GYioQnMtIphtYv5ci2XhDDEbwrbjr6ZnuzP+lNsClXaM2tcnUaaEo1CRL+Fb+rHAnPqk11uGxqC5mE7OGFuXy2FPvNxr1ELCQdnFZ8CAfG3NtabVQ1+XAyHxGHmDfXxNKfKdHPtJlBz1ni1O7MUsj7NmLnEhoModtXPnpUvs= fengf@Fenger
+
+          
       - name: Check the installation
         run: cosign version
 
@@ -113,6 +121,8 @@ jobs:
         run: cosign sign --yes "${TAGS}@${DIGEST}"
 
 
+
+        
 
 
 
